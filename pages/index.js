@@ -1,4 +1,4 @@
-import React , {useState} from 'react'
+import React, { useState, useEffect } from "react";
 import MainGrid from "../src/components/MainGrid";
 import Box from "../src/components/Box";
 import {
@@ -29,14 +29,37 @@ function ProfileSidebar(propriedades) {
     </Box>
   );
 }
+function ProfileRelationsBox({ propriedades }) {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {propriedades.title} ({propriedades.items.length})
+      </h2>
+      <ul>
+        {seguidores.map((itemAtual) => {
+          return (
+            <li key={itemAtual}>
+              <a href={`https://github.com/${itemAtual}.png`}>
+                <img src={itemAtual} />
+                <span>{itemAtual}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </ProfileRelationsBoxWrapper>
+  );
+}
 
 export default function Home() {
   const usuarioAleatorio = "Viviane-13";
-  const [comunidades, setComunidades] = useState([{
-    id: '122434343',
-    title: 'Eu odeio acordar cedo',
-    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-  }]);
+  const [comunidades, setComunidades] = useState([
+    {
+      id: "122434343",
+      title: "Eu odeio acordar cedo",
+      image: "https://alurakut.vercel.app/capa-comunidade-01.jpg",
+    },
+  ]);
   const pessoasFavoritas = [
     "juunegreiros",
     "omariosouto",
@@ -45,6 +68,17 @@ export default function Home() {
     "diego3g",
     "lucasmontano",
   ];
+
+  const [seguidores, setSeguidores] = useState([]);
+  useEffect(function () {
+    fetch("https://api.github.com/users/peas/followers")
+      .then(function (respostaDoServidor) {
+        return respostaDoServidor.json();
+      })
+      .then(function () {
+        setSeguidores(respostaCompleta);
+      });
+  }, []);
 
   return (
     <>
@@ -62,19 +96,21 @@ export default function Home() {
           </Box>
           <Box>
             <h2 className="subTitle">O que você deseja fazer?</h2>
-            <form onSubmit={function handleCriaComunidade(event){
-              event.preventDefault();
-              const dadosDoForm = new FormData(event.target);
+            <form
+              onSubmit={function handleCriaComunidade(event) {
+                event.preventDefault();
+                const dadosDoForm = new FormData(event.target);
 
-              const comunidade = {
-                id: new Date().toISOString(),
-                title: dadosDoForm.get('title'),
-                image: dadosDoForm.get('image'),
-              }
+                const comunidade = {
+                  id: new Date().toISOString(),
+                  title: dadosDoForm.get("title"),
+                  image: dadosDoForm.get("image"),
+                };
 
-              const comunidadesAtualizadas = [...comunidades, comunidade];
-              setComunidades(comunidadesAtualizadas);
-            }}>
+                const comunidadesAtualizadas = [...comunidades, comunidade];
+                setComunidades(comunidadesAtualizadas);
+              }}
+            >
               <div>
                 <input
                   placeholder="Qual vai ser o nome da sua comunidade?"
@@ -98,16 +134,15 @@ export default function Home() {
           className="profileRelationsArea"
           style={{ gridArea: "profileRelationsArea" }}
         >
+          <ProfileRelationsBox title="Seguidores" items={seguidores} />
           <ProfileRelationsBoxWrapper>
-          <h2 className="smallTitle">
-              Comunidades ({comunidades.length})
-            </h2>
-          <ul>
+            <h2 className="smallTitle">Comunidades ({comunidades.length})</h2>
+            <ul>
               {comunidades.map((itemAtual) => {
                 return (
                   <li key={itemAtual.id}>
-                    <a href={`/users/${itemAtual.title}`} >
-                     <img src={itemAtual.image} />
+                    <a href={`/users/${itemAtual.title}`}>
+                      <img src={itemAtual.image} />
                       <span>{itemAtual.title}</span>
                     </a>
                   </li>
@@ -124,7 +159,7 @@ export default function Home() {
               {pessoasFavoritas.map((itemAtual) => {
                 return (
                   <li key={itemAtual}>
-                    <a href={`/users/${itemAtual}`} >
+                    <a href={`/users/${itemAtual}`}>
                       <img src={`https://github.com/${itemAtual}.png`} />
                       <span>{itemAtual}</span>
                     </a>
