@@ -78,6 +78,10 @@ export default function Home() {
       .then(function () {
         setSeguidores(respostaCompleta);
       });
+      //API GraphQL
+      fetch('https://graphql.datocms.com/', {
+        method:'POST',
+      })
   }, []);
 
   return (
