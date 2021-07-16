@@ -3,7 +3,7 @@ import { SiteClient } from 'datocms-client';
 export default async function recebedorDeRequests(request, response) {
     if(request.method === 'POST') {
         const TOKEN = '46fe8dd6a7198e205e1a35ff28c51a';
-    
+        
         const client = new SiteClient(TOKEN);
 
         const registroCriado = await client.items.create({
