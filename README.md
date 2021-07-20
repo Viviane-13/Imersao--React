@@ -1,4 +1,3 @@
 # AluraKut
 
-
-https://alurakut-iota.vercel.app/
+alurakut-git-main-vivian49k-gmailcom.vercel.app
